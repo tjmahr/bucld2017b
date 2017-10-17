@@ -1,0 +1,194 @@
+---
+title: "Eyetracking data screening"
+author: "Tristan Mahr"
+date: "`r Sys.Date()`"
+output: 
+  github_document:
+    toc: true
+    toc_depth: 2
+
+---
+
+```{r setup, include = FALSE, message = FALSE, warning = FALSE, results = 'hide'}
+library("knitr")
+opts_chunk$set(
+  warning = FALSE,
+  collapse = TRUE, 
+  comment = "#>", 
+  message = FALSE,
+  fig.width = 8,
+  # fig.height = 6,
+  fig.asp = 0.618,
+  dpi = 300,
+  out.width = "80%")
+
+wd <- rprojroot::find_rstudio_root_file()
+opts_knit$set(root.dir = wd)
+```
+
+## Setup
+
+Load the looks.
+
+```{r}
+library(dplyr, warn.conflicts = FALSE)
+library(littlelisteners)
+
+wd <- rprojroot::find_rstudio_root_file()
+looks <- readr::read_csv(file.path(wd, "data-raw", "looks.csv.gz"))
+```
+
+Data screening settings.
+
+```{r}
+screening <- list(
+  # determine amount of missing data between:
+  min_time = -20,
+  max_time = 2020,
+  # remove trials with more than ... proportion of missing data
+  max_na = .5,
+  # blocks should have at least this many trials
+  min_blocks = 12
+)
+```
+
+
+Define a response code for the `aggregate_looks()` function.
+
+```{r}
+resp_def <- create_response_def(
+  primary = "Target",
+  others = c("PhonologicalFoil", "SemanticFoil", "Unrelated"),
+  elsewhere = "tracked",
+  missing = NA
+)  
+```
+
+## Find unreliable trials
+
+Excessive missing data is defined as having more than 50% missing data between 0
+and 2000 ms (relative to target onset). Determine the amount of missing data 
+during this window for each trials.
+
+```{r}
+trial_quality <- looks %>% 
+  filter(screening$min_time <= Time, Time <= screening$max_time) 
+
+range(trial_quality$Time)
+      
+trial_quality <- trial_quality %>% 
+  aggregate_looks(resp_def, Study + ResearchID + ChildDialect + 
+                    BlockDialect + TrialID ~ GazeByImageAOI) %>% 
+  select(Study:TrialID, PropNA)
+```
+
+Count the number of bad trials that need to be excluded.
+
+```{r}
+trial_quality %>% 
+  count(PropNA > UQ(screening$max_na)) %>% 
+  rename(`Num Trials` = n) %>% 
+  knitr::kable()
+
+trial_quality %>% 
+  count(ChildDialect, BlockDialect, PropNA > UQ(screening$max_na)) %>%  
+  rename(`Num Trials` = n) %>% 
+  knitr::kable()
+```
+
+Remove the bad trials.
+
+```{r}
+bad_trials <- trial_quality %>% filter(PropNA >= screening$max_na)
+looks_clean_trials <- looks %>% anti_join(bad_trials)
+```
+
+## Find unreliable blocks
+
+Count the number of trials leftover in each block.
+
+```{r}
+# Narrow down to one row per trial
+trial_counts <- looks_clean_trials %>% 
+  select(ChildID:ResearchID, BlockDialect, ChildDialect) %>% 
+  distinct() %>% 
+  # Count rows in each group
+  count(ChildID, ChildStudyID, BlockID, 
+        ResearchID, ChildDialect, BlockDialect) %>% 
+  arrange(n) %>% 
+  rename(`Num Trials in Block` = n)
+```
+
+We need to remove these children. They have too few trials in one of the blocks,
+so all their data should be removed.
+
+```{r}
+children_to_drop <- trial_counts %>% 
+  filter(`Num Trials in Block` < screening$min_blocks) 
+
+children_to_drop %>% 
+  knitr::kable()
+```
+
+Remove the children.
+
+```{r}
+looks_clean_blocks <- looks_clean_trials %>% 
+  anti_join(children_to_drop %>% select(ChildID) ) 
+```
+
+## Data screening counts
+
+Count the number of children and trials at each stage in data screening.
+
+```{r}
+cleaning_progression <- list(
+  `a. raw data` = looks,
+  `b. drop bad trials` = looks_clean_trials, 
+  `c. drop children w sparse blocks` = looks_clean_blocks) %>% 
+  bind_rows(.id = "Stage")
+
+cleaning_progression %>% 
+  group_by(Stage) %>% 
+  summarise(
+    `Num Children` = n_distinct(ChildID),
+    `Num Blocks` = n_distinct(BlockID),
+    `Num Trials` = n_distinct(TrialID)) %>% 
+  knitr::kable()
+
+cleaning_progression %>% 
+  group_by(
+    Stage, `Native Dialect` = ChildDialect) %>% 
+  summarise(
+    `Num Children` = n_distinct(ChildID),
+    `Num Blocks` = n_distinct(BlockID),
+    `Num Trials` = n_distinct(TrialID)) %>% 
+  knitr::kable()
+
+cleaning_progression %>% 
+  group_by(
+    Stage,
+    `Native Dialect` = ChildDialect,
+    `Block Dialect` = BlockDialect) %>% 
+  summarise(
+    `Num Children` = n_distinct(ChildID),
+    `Num Blocks` = n_distinct(BlockID),
+    `Num Trials` = n_distinct(TrialID)) %>% 
+  knitr::kable()
+```
+
+Double check the eyetracking experiment versions.
+
+```{r}
+looks_clean_blocks %>% distinct(StimulusSet, Version)
+```
+
+Save clean data.
+
+```{r}
+looks_clean_blocks %>% 
+  select(Study, ResearchID, Basename, ChildDialect, BlockDialect, Block_Age, 
+         TrialNo, Time, GazeByImageAOI) %>% 
+  readr::write_csv(file.path(wd, "data", "screened.csv.gz"))
+```
+
