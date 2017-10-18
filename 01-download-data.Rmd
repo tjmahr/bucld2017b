@@ -29,7 +29,7 @@ opts_knit$set(root.dir = wd)
 
 ## Do a little setup
 
-Create data directories.
+Create data directories if they don't exist yet.
 
 ```{r}
 library(dplyr, warn.conflicts = FALSE)
@@ -51,11 +51,11 @@ create_directory(file.path(wd, "data-raw"))
 create_directory(file.path(wd, "data"))
 ```
 
-Connect to database
+Connect to the database.
 
 ```{r}
-# Try to find the file with L2T database information in user's home folder or in
-# this repository
+# Try to find the file with L2T database information in user's home 
+# folder or in this repository
 find_database_config <- function() {
   home_config <- path.expand("~/l2t_db.cnf")
   repo_config <- rprojroot::find_rstudio_root_file("l2t_db.cnf")
@@ -93,7 +93,7 @@ src_tbls(l2t_eyetracking)
 Tables with `q_` at the front are queries which contain helpful information
 (like Study and ResearchID) alongside the main data in the table. We use the
 `q_TrialAttributesByStudy` table to get information about each eyetracking 
-trial. I use `q_` for queries that developed in these scripts as well.
+trial. 
 
 ```{r}
 # Dialects used in each block
@@ -103,13 +103,14 @@ q_block_dialects <- l2t_eyetracking %>%
     Task == "RWL", 
     BlockAttribute_Name == "Dialect", 
     Study %in% c("DialectSwitch", "MaternalEd")) %>% 
-  select(BlockID, Dialect = BlockAttribute_Value)
+  select(BlockID, BlockAttribute_Value) %>% 
+  rename(Dialect = BlockAttribute_Value)
 
 q_block_ages <- l2t_eyetracking %>% 
   tbl("Blocks") %>% 
   select(BlockID, Block_Age)
 
-# Find the blocks that used TP2 stimuli.
+# Find the blocks that used TP2 stimuli
 q_blocks_to_use <- l2t_eyetracking %>% 
   tbl("q_BlockAttributesByStudy") %>% 
   filter(
@@ -117,7 +118,8 @@ q_blocks_to_use <- l2t_eyetracking %>%
     BlockAttribute_Name == "StimulusSet", 
     BlockAttribute_Value == "TP2",
     Study %in% c("DialectSwitch", "MaternalEd")) %>% 
-  select(-BlockAttribute_Name, StimulusSet = BlockAttribute_Value) %>% 
+  select(-BlockAttribute_Name) %>% 
+  rename(StimulusSet = BlockAttribute_Value) %>% 
   left_join(q_block_dialects) %>% 
   left_join(q_block_ages)
 ```
@@ -236,7 +238,7 @@ q_blocks_to_use <- q_blocks_to_use %>%
 
 ## Download the gaze data
 
-Download the eyetracking data
+Download the eyetracking data.
 
 ```{r}
 # Keep just the trials in the blocks we want
@@ -257,22 +259,15 @@ df_rwl_looks <- df_raw_rwl_looks %>%
          Study, ResearchID, ChildDialect = Dialect, 
          Version, Basename, StimulusSet, BlockDialect, 
          Block_Age, TrialNo, Time, GazeByImageAOI)
+```
 
+Save our work. The eyetracking data has `nrow(df_rwl_looks)` rows, so we save 
+it in a compressed csv file. The readr package automatically compresses and 
+uncompresses `csv.gz` files.
+
+```{r}
 readr::write_csv(df_child_vars, file.path(wd, "data-raw", "child-info.csv"))
 readr::write_csv(df_rwl_looks, file.path(wd, "data-raw", "looks.csv.gz"))
-
-
-# rwl_looks <- rwl_looks %>% 
-#   left_join(blocks_to_keep) %>% 
-#   left_join(child_info) %>% 
-#   select(Study, ResearchID, Dialect, BlockDialect, Block_Age,
-#          BlockID, ChildID:Maternal_Education_Level, 
-#          Maternal_Education_Group:PPVT_Standard,
-#          TrialID, TrialNo, Time, GazeByImageAOI)
-# 
-# # rwl_looks %>% filter(is.na(Dialect))
-# 
-# rwl_looks <- rwl_looks %>% 
-
 ```
+
 

@@ -17,7 +17,6 @@ opts_chunk$set(
   comment = "#>", 
   message = FALSE,
   fig.width = 8,
-  # fig.height = 6,
   fig.asp = 0.618,
   dpi = 300,
   out.width = "80%")
@@ -85,6 +84,9 @@ trial_quality <- trial_quality %>%
 Count the number of bad trials that need to be excluded.
 
 ```{r}
+# Using UQ to unquote `screening$max_na` so that the created column is
+# *not* named `PropNA > screening$max_na` but instead uses the value of
+# `screening$max_na` in the column name.
 trial_quality %>% 
   count(PropNA > UQ(screening$max_na)) %>% 
   rename(`Num Trials` = n) %>% 
@@ -99,8 +101,10 @@ trial_quality %>%
 Remove the bad trials.
 
 ```{r}
-bad_trials <- trial_quality %>% filter(PropNA >= screening$max_na)
-looks_clean_trials <- looks %>% anti_join(bad_trials)
+bad_trials <- trial_quality %>% 
+  filter(PropNA >= screening$max_na)
+
+looks_clean_trials <- anti_join(looks, bad_trials)
 ```
 
 ## Find unreliable blocks

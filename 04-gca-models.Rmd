@@ -1,0 +1,339 @@
+---
+title: "Model eyetracking data"
+author: "Tristan Mahr"
+date: "`r Sys.Date()`"
+output: 
+  github_document:
+    toc: true
+    toc_depth: 2
+---
+
+```{r setup, include = FALSE, message = FALSE, warning = FALSE, results = 'hide'}
+library("knitr")
+opts_chunk$set(
+  warning = FALSE,
+  collapse = TRUE, 
+  comment = "#>", 
+  message = FALSE,
+  fig.width = 8,
+  fig.asp = 0.618,
+  dpi = 300,
+  out.width = "80%")
+
+wd <- rprojroot::find_rstudio_root_file()
+opts_knit$set(root.dir = wd)
+```
+
+## Setup
+
+```{r, results = 'hide'}
+library(dplyr)
+library(lme4)
+library(ggplot2)
+library(hrbrthemes)
+
+# Work relative to RStudio project
+wd <- rprojroot::find_rstudio_root_file()
+
+d_m <- readr::read_csv(file.path(wd, "data", "modeling.csv"))
+```
+
+These are plotting settings and helpers.
+
+```{r}
+stat_mean_se <- function(...) {
+  stat_summary(fun.data = mean_se, ...)
+}
+
+stat_mean <- function(...) {
+  dots <- list(...)
+  dots$fun.y <- mean
+  if (is.null(dots$geom)) dots$geom <- "line"
+  do.call(stat_summary, dots)
+}
+  
+plot_text <- list(
+  x_time = "Time (ms) after target noun onset", 
+  y_target = "Proportion of looks to named image",
+  y_image = "Proportion of looks to image",
+  caption_mean_se = "Mean ± SE"
+)
+
+legend_bottom <- theme(
+  legend.position = "bottom", 
+  legend.text = element_text(size = 10), 
+  legend.justification = "left")
+
+legend_top <- theme(
+  legend.position = "top", 
+  legend.text = element_text(size = 10), 
+  legend.justification = "left")
+
+colors <- viridis::scale_color_viridis(end = .7, discrete = TRUE)
+
+hline_chance <- geom_hline(yintercept = .25, size = 1.25, color = "#cccccc")
+vline_onset <- geom_vline(xintercept = 0, size = 1.25, color = "#cccccc")
+```
+
+
+
+## Growth curve models
+
+Based on the [visual exploratory data analysis](./03-eyetracking-data.md), there
+is no average effect of hearing a non-native dialect on familiar word
+recognition. We need to confirm this observation through growth curve analysis.
+
+First, we set some options for the analysis, namely the start and end time of
+the analysis window.
+
+```{r}
+opts_gca <- list(
+  min_time = 250,
+  max_time = 1500
+)
+```
+
+We model looks from `r opts_gca$min_time` to `r opts_gca$max_time` ms.
+
+```{r windows, echo = FALSE}
+# Split data into three dataframes, based on whether looks are before, 
+# after, or inside analysis window
+data_windows <- d_m %>% 
+  mutate(
+    window = case_when(
+      Time < opts_gca$min_time ~ "before",
+      opts_gca$max_time < Time ~ "after",
+      TRUE ~ "inside")) %>% 
+  split(.$window)
+
+  
+ggplot() + 
+  aes(x = Time, y = Prop_Target) + 
+  hline_chance + 
+  vline_onset + 
+  stat_mean_se(aes(group = HearsNativeDialect), 
+               data = bind_rows(data_windows$before, data_windows$after),
+               color = "grey50") + 
+  stat_mean_se(aes(color = `Child hears`), data = data_windows$inside) +
+  colors +
+  ylim(0, 1) +
+  theme_ipsum_rc(axis_title_size = 11) + 
+  legend_top + 
+  labs(x = plot_text$x_time, 
+       y = plot_text$y_target) 
+
+ggplot() + 
+  aes(x = Time, y = Prop_Target, 
+      group = interaction(ResearchID, HearsNativeDialect)) + 
+  hline_chance + 
+  vline_onset + 
+  stat_mean(data = d_m, color = "grey50") + 
+  stat_mean(aes(color = `Child hears`), data = data_windows$inside) +
+  colors +
+  theme_ipsum_rc(axis_title_size = 11) + 
+  legend_top + 
+  labs(x = plot_text$x_time, 
+       y = plot_text$y_target)
+```
+
+
+We represent time in our growth curve models as a cubic orthogonal polynomial.
+This means that we convert out _Time_ variable into three uncorrelated trend
+curves. These are the predictors we use to represent time.
+
+```{r, fig.width=4, out.width="50%"}
+# Apply analysis window and Create orthogonal polynomial of time
+d_m <- d_m %>% 
+  filter(opts_gca$min < Time, Time < opts_gca$max_time) %>% 
+  polypoly::poly_add_columns(Time, 3, prefix = "ot", scale_width = 1)
+```
+
+```{r polypoly, fig.width=4, out.width="50%", echo = FALSE}
+d_m %>% 
+  distinct(Time, ot1, ot2, ot3) %>% 
+  tidyr::gather(Degree, value, -Time) %>% 
+  ggplot() + 
+    aes(x = Time, y = value, color = Degree) + 
+    geom_line() + 
+    labs(title = "Trial-time features")
+```
+
+
+We are going to use a _generalized linear mixed effects model_ to perform the
+growth curve analysis. 
+
+** write more about this **
+
+```{r, eval = FALSE}
+glmer_controls <- glmerControl(
+  optimizer = "bobyqa",
+  optCtrl = list(maxfun = 2e5))
+
+m <- glmer(
+  cbind(Primary, Others) ~ 
+    (ot1 + ot2 + ot3) * HearsNativeDialect + 
+    (ot1 + ot2 + ot3 | ResearchID / HearsNativeDialect),
+  data = d_m,
+  control = glmer_controls,
+  family = binomial)
+summary(m)
+```
+
+```{r, cache = TRUE}
+glmer_controls <- glmerControl(
+  optimizer = "bobyqa",
+  optCtrl = list(maxfun = 2e5))
+
+cond_omitted <- glmer(
+  cbind(Primary, Others) ~ 
+    (ot1 + ot2 + ot3) + 
+    (ot1 + ot2 + ot3 | ResearchID),
+  data = d_m, 
+  control = glmer_controls,
+  family = binomial)
+summary(cond_omitted)
+
+cond_as_fixed_eff <- glmer(
+  cbind(Primary, Others) ~ 
+    (ot1 + ot2 + ot3) * HearsNativeDialect + 
+    (ot1 + ot2 + ot3 | ResearchID),
+  data = d_m,
+  control = glmer_controls,
+  family = binomial)
+summary(cond_as_fixed_eff)
+
+cond_as_random_eff <- m2b <- glmer(
+  cbind(Primary, Others) ~ 
+    (ot1 + ot2 + ot3) + 
+    (ot1 + ot2 + ot3 | ResearchID / HearsNativeDialect),
+  data = d_m,
+  control = glmer_controls,
+  family = binomial)
+summary(cond_as_random_eff)
+
+cond_as_both <- glmer(
+  cbind(Primary, Others) ~ 
+    (ot1 + ot2 + ot3) * HearsNativeDialect + 
+    (ot1 + ot2 + ot3 | ResearchID / HearsNativeDialect),
+  data = d_m,
+  control = glmer_controls,
+  family = binomial)
+summary(cond_as_both)
+```
+
+Use a model comparison on the four variants.
+
+```{r}
+anova_results <- anova(cond_omitted, cond_as_fixed_eff, 
+                       cond_as_random_eff, cond_as_both) %>% 
+  as.data.frame() %>% 
+  tibble::rownames_to_column("model") %>% 
+  as_data_frame()
+
+anova_results %>% 
+  select(-deviance) %>% 
+  mutate_at(c("AIC", "BIC", "logLik"), round) %>% 
+  mutate_at("Chisq", round, 2) %>% 
+  mutate_at("Pr(>Chisq)", round, 4) %>% 
+  knitr::kable()
+```
+
+This is kind of unusual. All of the model comparison metrics favor the model
+that includes Child x Native Dialect random effects but omits the Native Dialect
+fixed effects. My interpretation:
+
+1. For each child, we have two growth curves: The data from hearing their 
+   native dialect and the data from hearing the non-native dialect. Their data 
+   is _nested_ in these two kinds of blocks.
+2. This variability is important for the model, so we include it in 
+   the random effects.
+3. But on average, hearing one's native dialect or not does not influence 
+   the growth curve features in a systematic way. So we can ignore using 
+   condition as a predictor.
+4. When we include that native dialect in the model's random effects, we are 
+   incorporating information about the nesting of the data. Instead of 
+   capturing Child x Native Dialect effects, it seems like the random effects 
+   are capturing Child x Block of Testing variability.
+
+
+*** 
+
+next steps:
+* compare child dialect vs vocab vs maternal education
+
+```{r, include=FALSE}
+d_m %>% 
+  mutate(fitted = predict(cond_as_random_eff, 
+                          re.form = ~ ot1 + ot2 + ot3 | ResearchID),
+         fixef = predict(cond_as_random_eff, re.form = ~ 0)) %>% 
+  ggplot() + 
+  aes(x = Time, y = fitted - fixef, color = HearsNativeDialect) + 
+  stat_mean(aes(group = interaction(ResearchID, HearsNativeDialect)))
+```
+
+
+```{r, eval = FALSE}
+d_m_narrow <- d_m %>% 
+  filter(!is.na(EVT_Standard), !is.na(Maternal_Education_Group))
+
+m4 <- glmer(
+  cbind(Primary, Others) ~ 
+    (1 + ot1) * scale(EVT_Standard) + ot2 + ot3 +
+    (ot1 + ot2 + ot3 | ResearchID / HearsNativeDialect),
+  data = d_m_narrow,
+  control = glmer_controls,
+  family = binomial)
+summary(m4)
+
+m5 <- glmer(
+  cbind(Primary, Others) ~ 
+    (1 + ot1) * Dialect + ot2 + ot3 +
+    (ot1 + ot2 + ot3 | ResearchID / HearsNativeDialect),
+  data = d_m_narrow,
+  control = glmer_controls,
+  family = binomial)
+summary(m5)
+
+m6 <- glmer(
+  cbind(Primary, Others) ~ 
+    (1 + ot1) * Dialect + (1 + ot1) * scale(EVT_Standard) + ot2 + ot3 +
+    (ot1 + ot2 + ot3 | ResearchID / HearsNativeDialect),
+  data = d_m_narrow,
+  control = glmer_controls,
+  family = binomial)
+summary(m6)
+
+m7 <- glmer(
+  cbind(Primary, Others) ~ 
+    (1 + ot1) * Maternal_Education_Group + ot2 + ot3 +
+    (ot1 + ot2 + ot3 | ResearchID / HearsNativeDialect),
+  data = d_m_narrow,
+  control = glmer_controls,
+  family = binomial)
+summary(m7)
+
+m8 <- glmer(
+  cbind(Primary, Others) ~ 
+    (1 + ot1) * Maternal_Education_Group + 
+     (1 + ot1) * Dialect + 
+    ot2 + ot3 +
+    (ot1 + ot2 + ot3 | ResearchID / HearsNativeDialect),
+  data = d_m_narrow,
+  control = glmer_controls,
+  family = binomial)
+summary(m8)
+
+anova(m4, m5)
+anova(m4, m5, m6) 
+anova(m4, m5, m6, m7, m8) 
+anova(m5, m7, m8) 
+
+
+anova(m, m2, m2b, m3)
+anova(m, m2b, m3)
+anova(m, m2b)
+anova(m, m2b, m2)
+anova(m, m2b, m2, m4b)
+```
+
+

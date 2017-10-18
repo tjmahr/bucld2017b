@@ -1,7 +1,7 @@
 Eyetracking data screening
 ================
 Tristan Mahr
-2017-10-17
+2017-10-18
 
 -   [Setup](#setup)
 -   [Find unreliable trials](#find-unreliable-trials)
@@ -67,6 +67,9 @@ trial_quality <- trial_quality %>%
 Count the number of bad trials that need to be excluded.
 
 ``` r
+# Using UQ to unquote `screening$max_na` so that the created column is
+# *not* named `PropNA > screening$max_na` but instead uses the value of
+# `screening$max_na` in the column name.
 trial_quality %>% 
   count(PropNA > UQ(screening$max_na)) %>% 
   rename(`Num Trials` = n) %>% 
@@ -100,8 +103,10 @@ trial_quality %>%
 Remove the bad trials.
 
 ``` r
-bad_trials <- trial_quality %>% filter(PropNA >= screening$max_na)
-looks_clean_trials <- looks %>% anti_join(bad_trials)
+bad_trials <- trial_quality %>% 
+  filter(PropNA >= screening$max_na)
+
+looks_clean_trials <- anti_join(looks, bad_trials)
 ```
 
 Find unreliable blocks
@@ -225,7 +230,6 @@ cleaning_progression %>%
 Data quality stats for remaining children.
 
 ``` r
-
 looks_clean_blocks %>%
   filter(between(Time, -20, 2020)) %>% 
   aggregate_looks(resp_def, ChildDialect + BlockDialect + 
@@ -260,7 +264,8 @@ looks_clean_blocks %>%
 Double check the eyetracking experiment versions.
 
 ``` r
-looks_clean_blocks %>% distinct(StimulusSet, Version)
+looks_clean_blocks %>% 
+  distinct(StimulusSet, Version)
 #> # A tibble: 1 x 2
 #>    Version StimulusSet
 #>      <chr>       <chr>
@@ -274,4 +279,12 @@ looks_clean_blocks %>%
   select(Study, ResearchID, Basename, ChildDialect, BlockDialect, Block_Age, 
          TrialNo, Time, GazeByImageAOI) %>% 
   readr::write_csv(file.path(wd, "data", "screened.csv.gz"))
+```
+
+Update participants data to only have children with eyetracking data.
+
+``` r
+readr::read_csv(file.path(wd, "data-raw", "child-info.csv")) %>% 
+  semi_join(looks_clean_blocks) %>% 
+  readr::write_csv(file.path(wd, "data", "scores.csv"))
 ```
