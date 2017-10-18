@@ -177,10 +177,40 @@ cleaning_progression %>%
   knitr::kable()
 ```
 
+### Missing data stats
+
+Data quality stats for remaining children.
+
+```{r}
+looks_clean_blocks %>%
+  filter(between(Time, -20, 2020)) %>% 
+  aggregate_looks(resp_def, ChildDialect + BlockDialect + 
+                    ResearchID + TrialID ~ GazeByImageAOI) %>% 
+  group_by(ChildDialect, BlockDialect, ResearchID) %>% 
+  summarise(
+    nGoodTrials = n(),
+    Mean_Prop_NA = mean(PropNA)) %>% 
+  summarise(
+    `N Children` = n(), 
+    `Total Useable Trials` = sum(nGoodTrials),
+    `Mean N of Useable Trials` = mean(nGoodTrials) %>% round(1), 
+    `SD Trials` = sd(nGoodTrials) %>% round(1),
+    `Min Trials` = min(nGoodTrials),
+    `Max Trials` = max(nGoodTrials),
+    `Mean Prop of Missing Data` = mean(Mean_Prop_NA) %>% round(3), 
+    `SD Prop Missing` = sd(Mean_Prop_NA) %>% round(3),
+    `Min Prop Missing` = min(Mean_Prop_NA) %>% round(3),
+    `Max Prop Missing` = max(Mean_Prop_NA) %>% round(3)) %>% 
+  knitr::kable()
+```
+
+### Clean up
+
 Double check the eyetracking experiment versions.
 
 ```{r}
-looks_clean_blocks %>% distinct(StimulusSet, Version)
+looks_clean_blocks %>% 
+  distinct(StimulusSet, Version)
 ```
 
 Save clean data.
@@ -191,4 +221,13 @@ looks_clean_blocks %>%
          TrialNo, Time, GazeByImageAOI) %>% 
   readr::write_csv(file.path(wd, "data", "screened.csv.gz"))
 ```
+
+Update participants data to only have children with eyetracking data.
+
+```{r}
+readr::read_csv(file.path(wd, "data-raw", "child-info.csv")) %>% 
+  semi_join(looks_clean_blocks) %>% 
+  readr::write_csv(file.path(wd, "data", "scores.csv"))
+```
+
 

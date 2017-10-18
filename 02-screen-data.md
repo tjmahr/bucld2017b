@@ -220,6 +220,43 @@ cleaning_progression %>%
 | c. drop children w sparse blocks | MAE            | AAE           |            35|          35|         756|
 | c. drop children w sparse blocks | MAE            | SAE           |            35|          35|         742|
 
+### Missing data stats
+
+Data quality stats for remaining children.
+
+``` r
+
+looks_clean_blocks %>%
+  filter(between(Time, -20, 2020)) %>% 
+  aggregate_looks(resp_def, ChildDialect + BlockDialect + 
+                    ResearchID + TrialID ~ GazeByImageAOI) %>% 
+  group_by(ChildDialect, BlockDialect, ResearchID) %>% 
+  summarise(
+    nGoodTrials = n(),
+    Mean_Prop_NA = mean(PropNA)) %>% 
+  summarise(
+    `N Children` = n(), 
+    `Total Useable Trials` = sum(nGoodTrials),
+    `Mean N of Useable Trials` = mean(nGoodTrials) %>% round(1), 
+    `SD Trials` = sd(nGoodTrials) %>% round(1),
+    `Min Trials` = min(nGoodTrials),
+    `Max Trials` = max(nGoodTrials),
+    `Mean Prop of Missing Data` = mean(Mean_Prop_NA) %>% round(3), 
+    `SD Prop Missing` = sd(Mean_Prop_NA) %>% round(3),
+    `Min Prop Missing` = min(Mean_Prop_NA) %>% round(3),
+    `Max Prop Missing` = max(Mean_Prop_NA) %>% round(3)) %>% 
+  knitr::kable()
+```
+
+| ChildDialect | BlockDialect |  N Children|  Total Useable Trials|  Mean N of Useable Trials|  SD Trials|  Min Trials|  Max Trials|  Mean Prop of Missing Data|  SD Prop Missing|  Min Prop Missing|  Max Prop Missing|
+|:-------------|:-------------|-----------:|---------------------:|-------------------------:|----------:|-----------:|-----------:|--------------------------:|----------------:|-----------------:|-----------------:|
+| AAE          | AAE          |          21|                   455|                      21.7|        2.6|          15|          24|                      0.081|            0.048|             0.016|             0.190|
+| AAE          | SAE          |          21|                   443|                      21.1|        2.9|          12|          24|                      0.086|            0.054|             0.024|             0.216|
+| MAE          | AAE          |          35|                   756|                      21.6|        3.6|          12|          24|                      0.087|            0.066|             0.002|             0.278|
+| MAE          | SAE          |          35|                   742|                      21.2|        3.2|          12|          24|                      0.082|            0.051|             0.011|             0.237|
+
+### Clean up
+
 Double check the eyetracking experiment versions.
 
 ``` r

@@ -167,6 +167,20 @@ df_child_info$Maternal_Education_Group <- factor(
   df_child_info$Maternal_Education_Group, 
   levels = c("Low", "Mid", "High")
 )
+
+df_evt <- tbl(l2t_main, "EVT") %>% 
+  select(Study, ResearchID, EVT_Age:EVT_Standard) %>% 
+  collect()
+
+df_ppvt <- tbl(l2t_main, "PPVT") %>% 
+  select(Study, ResearchID, PPVT_Age:PPVT_Standard) %>% 
+  collect()
+
+df_child_vars <- df_child_info %>% 
+  select(Study, ResearchID, ChildStudyID, Female:Gender) %>% 
+  distinct() %>% 
+  left_join(df_evt) %>% 
+  left_join(df_ppvt)
 ```
 
 Attach research IDs and study names to the non-TP1 blocks.
@@ -244,7 +258,9 @@ df_rwl_looks <- df_raw_rwl_looks %>%
          Version, Basename, StimulusSet, BlockDialect, 
          Block_Age, TrialNo, Time, GazeByImageAOI)
 
+readr::write_csv(df_child_vars, file.path(wd, "data-raw", "child-info.csv"))
 readr::write_csv(df_rwl_looks, file.path(wd, "data-raw", "looks.csv.gz"))
+
 
 # rwl_looks <- rwl_looks %>% 
 #   left_join(blocks_to_keep) %>% 
