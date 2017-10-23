@@ -13,9 +13,7 @@ eyetracking data, removing trials and participants with excessive missing data.
 `03-eyetracking-data.Rmd` ([output](./03-eyetracking-data.md)) provides various 
 plots of the eyetracking data from the experiment.
 
-`04-gca-models.Rmd` ([output](./04-gca-models.md)) provides various 
-plots of the eyetracking data from the experiment.
-
-
+`04-gca-models.Rmd` ([output](./04-gca-models.md)) runs growth curve analyses
+for the data.
 
 
