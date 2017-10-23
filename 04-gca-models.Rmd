@@ -536,7 +536,7 @@ Two of the three model comparison metrics, however, prefer the model with the
 interaction effect.
 
 ```{r, echo = FALSE}
-anova(m_evt, m_dialect, m_dialect_evt, m_dialect_x_evt) %>% 
+anova(m_evt, m_dialect, m_dialect_x_evt) %>% 
   tidy_anova()
 ```
 

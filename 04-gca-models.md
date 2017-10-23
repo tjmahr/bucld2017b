@@ -664,8 +664,7 @@ Two of the three model comparison metrics, however, prefer the model with the in
 |:-------------------|----:|------:|------:|-------:|------:|-------:|--------------:|
 | m\_evt             |   26|  13574|  13726|   -6761|     NA|      NA|             NA|
 | m\_dialect         |   26|  13571|  13723|   -6759|   3.29|       0|         0.0000|
-| m\_dialect\_evt    |   28|  13574|  13737|   -6759|   1.44|       2|         0.4868|
-| m\_dialect\_x\_evt |   30|  13569|  13744|   -6755|   8.32|       2|         0.0156|
+| m\_dialect\_x\_evt |   30|  13569|  13744|   -6755|   9.76|       4|         0.0447|
 
 ### Include Maternal education
 
