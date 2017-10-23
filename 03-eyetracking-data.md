@@ -1,7 +1,7 @@
 Plot eyetracking data
 ================
 Tristan Mahr
-2017-10-18
+2017-10-22
 
 -   [Set up](#set-up)
 -   [Head counts and other stats](#head-counts-and-other-stats)
