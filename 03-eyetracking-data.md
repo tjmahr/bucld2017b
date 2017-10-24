@@ -1,7 +1,7 @@
 Plot eyetracking data
 ================
 Tristan Mahr
-2017-10-22
+2017-10-24
 
 -   [Set up](#set-up)
 -   [Head counts and other stats](#head-counts-and-other-stats)
@@ -132,6 +132,30 @@ df_child_vars %>%
 |:--------|-----------:|------------:|------------------:|----------------:|------:|------------------:|----------------:|-------:|-------------------:|-----------------:|
 | AAE     |          21|           14|               47.7|              8.0|     21|               95.6|             11.4|      21|                95.5|              10.1|
 | MAE     |          35|           16|               50.8|              5.7|     34|              120.5|             14.8|      35|               120.9|              17.6|
+
+``` r
+
+df_child_vars %>% 
+  group_by(Maternal_Education_Group) %>% 
+  summarise(
+    `N Children` = n(), 
+    `Mean Age (months)` = narm_mean(EVT_Age),
+    `SD Age (months)` = narm_sd(EVT_Age),
+    `N EVT` = narm_n(EVT_Raw), 
+    `Mean EVT Standard` = narm_mean(EVT_Standard),
+    `SD EVT Standard` = narm_sd(EVT_Standard),
+    `N PPVT` = narm_n(PPVT_Raw), 
+    `Mean PPVT Standard` = narm_mean(PPVT_Standard),
+    `SD PPVT Standard` = narm_sd(PPVT_Standard)) %>% 
+  knitr::kable(digits = 1)
+```
+
+| Maternal\_Education\_Group |  N Children|  Mean Age (months)|  SD Age (months)|  N EVT|  Mean EVT Standard|  SD EVT Standard|  N PPVT|  Mean PPVT Standard|  SD PPVT Standard|
+|:---------------------------|-----------:|------------------:|----------------:|------:|------------------:|----------------:|-------:|-------------------:|-----------------:|
+| High                       |          27|               50.5|              5.7|     27|              121.3|             15.8|      27|               122.6|              13.8|
+| Low                        |          19|               47.1|              6.6|     19|               96.8|             13.0|      19|                97.1|              11.3|
+| Mid                        |           8|               53.4|              8.9|      7|              113.1|             15.4|       8|               107.9|              29.3|
+| NA                         |           2|               48.0|             11.3|      2|               99.0|              5.7|       2|               109.5|              19.1|
 
 ``` r
 

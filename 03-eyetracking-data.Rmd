@@ -98,6 +98,20 @@ df_child_vars %>%
   knitr::kable(digits = 1)
 
 df_child_vars %>% 
+  group_by(Maternal_Education_Group) %>% 
+  summarise(
+    `N Children` = n(), 
+    `Mean Age (months)` = narm_mean(EVT_Age),
+    `SD Age (months)` = narm_sd(EVT_Age),
+    `N EVT` = narm_n(EVT_Raw), 
+    `Mean EVT Standard` = narm_mean(EVT_Standard),
+    `SD EVT Standard` = narm_sd(EVT_Standard),
+    `N PPVT` = narm_n(PPVT_Raw), 
+    `Mean PPVT Standard` = narm_mean(PPVT_Standard),
+    `SD PPVT Standard` = narm_sd(PPVT_Standard)) %>% 
+  knitr::kable(digits = 1)
+
+df_child_vars %>% 
   group_by(Dialect, Maternal_Education_Group) %>% 
   summarise(
     `N Children` = n(), 
