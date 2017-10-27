@@ -406,13 +406,13 @@ predictions <- new_data_template %>%
   mutate(fitted = predict(m_evt, newdata = ., re.form = ~ 0, type = "resp"))
 
 ggplot(predictions) + 
-  aes(x = Time, y = fitted, color = factor(EVTc)) + 
+  aes(x = Time, y = fitted, linetype = factor(EVTc)) + 
   hline_chance + 
-  geom_line() + 
+  geom_line(size = 1) + 
   theme_ipsum_rc(axis_title_size = 11, plot_title_size = 13) +
   labs(
     x = plot_text$x_time,
-    color = "EVT (z score)", 
+    linetype = "EVT (z score)", 
     y = "Predicted proportion of looks",
     caption = "Conditioned on vocabulary") 
 ```
@@ -460,13 +460,12 @@ predictions <- new_data_template %>%
   mutate(fitted = predict(m_dialect, newdata = ., re.form = ~ 0, type = "resp"))
 
 ggplot(predictions) + 
-  aes(x = Time, y = fitted, linetype = Dialect) + 
+  aes(x = Time, y = fitted, color = Dialect) + 
   hline_chance + 
-  geom_line() + 
+  geom_line(size = 1) + 
   theme_ipsum_rc(axis_title_size = 11, plot_title_size = 13) +
   labs(
     x = plot_text$x_time,
-    color = "EVT (z score)", 
     y = "Predicted proportion of looks",
     caption = "Conditioned on native dialect") 
 
@@ -476,13 +475,13 @@ predictions <- new_data_template %>%
                           re.form = ~ 0, type = "resp"))
 
 ggplot(predictions) + 
-  aes(x = Time, y = fitted, linetype = Dialect, color = factor(EVTc)) + 
+  aes(x = Time, y = fitted, color = Dialect, linetype = factor(EVTc)) + 
   hline_chance + 
-  geom_line() + 
+  geom_line(size = 1) + 
   theme_ipsum_rc(axis_title_size = 11, plot_title_size = 13) +
   labs(
     x = plot_text$x_time,
-    color = "EVT (z score)", 
+    linetype = "EVT (z score)", 
     y = "Predicted proportion of looks",
     caption = "Conditioned on native dialect and vocabulary") 
 
@@ -492,13 +491,13 @@ predictions <- new_data_template %>%
                           re.form = ~ 0, type = "resp"))
 
 ggplot(predictions) + 
-  aes(x = Time, y = fitted, linetype = Dialect, color = factor(EVTc)) + 
+  aes(x = Time, y = fitted, color = Dialect, linetype = factor(EVTc)) + 
   hline_chance + 
-  geom_line() + 
+  geom_line(size = 1) + 
   theme_ipsum_rc(axis_title_size = 11, plot_title_size = 13) +
   labs(
     x = plot_text$x_time,
-    color = "EVT (z score)", 
+    linetype = "EVT (z score)", 
     y = "Predicted proportion of looks",
     caption = "Conditioned on native dialect x vocabulary") 
 ```
@@ -593,17 +592,19 @@ As before, the models are best understood through plotting.
 ```{r medu-preds, echo = FALSE}
 new_data_template <- d_narrow %>% 
   distinct(Dialect, Medu, Time, ot1, ot2, ot3) %>% 
-  mutate(ResearchID = "FakeChild")
+  mutate(ResearchID = "FakeChild") %>% 
+  mutate(MeduPlot = factor(Medu, c("Low", "Mid", "High")))
 
 predictions <- new_data_template %>% 
   tidyr::crossing(EVTc = -1:1) %>% 
   mutate(fitted = predict(m_medu, newdata = ., re.form = ~ 0, type = "resp"))
 
 ggplot(predictions) + 
-  aes(x = Time, y = fitted, color = Medu) + 
+  aes(x = Time, y = fitted, color = MeduPlot) + 
   hline_chance + 
-  geom_line() + 
+  geom_line(size = 1) + 
   theme_ipsum_rc(axis_title_size = 11, plot_title_size = 13) +
+  viridis::scale_color_viridis(discrete = TRUE, end = .7, option = "C") +
   labs(
     x = plot_text$x_time,
     color = "Maternal Ed.", 
@@ -615,10 +616,11 @@ predictions <- new_data_template %>%
   mutate(fitted = predict(m_medu_dialect, newdata = ., re.form = ~ 0, type = "resp"))
 
 ggplot(predictions) + 
-  aes(x = Time, y = fitted, color = Medu, linetype = Dialect) + 
+  aes(x = Time, y = fitted, color = MeduPlot, linetype = Dialect) + 
   hline_chance + 
-  geom_line() + 
+  geom_line(size = 1) + 
   theme_ipsum_rc(axis_title_size = 11, plot_title_size = 13) +
+  viridis::scale_color_viridis(discrete = TRUE, end = .7, option = "C") +
   labs(
     x = plot_text$x_time,
     color = "Maternal Ed.", 
@@ -696,9 +698,10 @@ predictions <- new_data_template %>%
   mutate(fitted = predict(m_medu_evt, newdata = ., re.form = ~ 0, type = "resp"))
 
 ggplot(predictions) + 
-  aes(x = Time, y = fitted, color = Medu, linetype = factor(EVTc)) + 
+  aes(x = Time, y = fitted, color = MeduPlot, linetype = factor(EVTc)) + 
   hline_chance + 
-  geom_line() + 
+  geom_line(size = 1) + 
+  viridis::scale_color_viridis(discrete = TRUE, end = .7, option = "C") +
   theme_ipsum_rc(axis_title_size = 11, plot_title_size = 13) +
   labs(
     x = plot_text$x_time,
@@ -712,9 +715,10 @@ predictions <- new_data_template %>%
   mutate(fitted = predict(m_medu_x_evt, newdata = ., 
                           re.form = ~ 0, type = "resp"))
 ggplot(predictions) + 
-  aes(x = Time, y = fitted, color = Medu, linetype = factor(EVTc)) + 
+  aes(x = Time, y = fitted, color = MeduPlot, linetype = factor(EVTc)) + 
   hline_chance + 
-  geom_line() + 
+  geom_line(size = 1) + 
+  viridis::scale_color_viridis(discrete = TRUE, end = .7, option = "C") +
   theme_ipsum_rc(axis_title_size = 11, plot_title_size = 13) +
   labs(
     x = plot_text$x_time,

@@ -1,7 +1,7 @@
 Model eyetracking data
 ================
 Tristan Mahr
-2017-10-22
+2017-10-27
 
 -   [Setup](#setup)
 -   [Growth curve models prep](#growth-curve-models-prep)
@@ -1078,9 +1078,10 @@ predictions <- new_data_template %>%
   mutate(fitted = predict(m_medu_evt, newdata = ., re.form = ~ 0, type = "resp"))
 
 ggplot(predictions) + 
-  aes(x = Time, y = fitted, color = Medu, linetype = factor(EVTc)) + 
+  aes(x = Time, y = fitted, color = MeduPlot, linetype = factor(EVTc)) + 
   hline_chance + 
-  geom_line() + 
+  geom_line(size = 1) + 
+  viridis::scale_color_viridis(discrete = TRUE, end = .7, option = "C") +
   theme_ipsum_rc(axis_title_size = 11, plot_title_size = 13) +
   labs(
     x = plot_text$x_time,
@@ -1099,9 +1100,10 @@ predictions <- new_data_template %>%
   mutate(fitted = predict(m_medu_x_evt, newdata = ., 
                           re.form = ~ 0, type = "resp"))
 ggplot(predictions) + 
-  aes(x = Time, y = fitted, color = Medu, linetype = factor(EVTc)) + 
+  aes(x = Time, y = fitted, color = MeduPlot, linetype = factor(EVTc)) + 
   hline_chance + 
-  geom_line() + 
+  geom_line(size = 1) + 
+  viridis::scale_color_viridis(discrete = TRUE, end = .7, option = "C") +
   theme_ipsum_rc(axis_title_size = 11, plot_title_size = 13) +
   labs(
     x = plot_text$x_time,
