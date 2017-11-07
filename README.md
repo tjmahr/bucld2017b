@@ -1,5 +1,5 @@
-# Understanding the effects of dialect familiarity on lexical processing \
-efficiency in preschool children using the visual world paradigm
+# Understanding the effects of dialect familiarity on lexical processing 
+# efficiency in preschool children using the visual world paradigm
 
 ## Repository contents
 
