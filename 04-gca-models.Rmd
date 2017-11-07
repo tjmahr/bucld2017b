@@ -11,6 +11,8 @@ output:
 ```{r setup, include = FALSE, message = FALSE, warning = FALSE, results = 'hide'}
 library("knitr")
 opts_chunk$set(
+  cache.path = "assets/cache/04-",
+  fig.path = "assets/figure/04-",
   warning = FALSE,
   collapse = TRUE, 
   comment = "#>", 
@@ -742,3 +744,11 @@ vocabulary does make a difference.
   single predictor among them is maternal education.
 * Vocabulary size might matter more the low maternal education group but the 
   evidence is not overwhelming.
+
+
+***
+
+```{r}
+sessioninfo::session_info()
+```
+

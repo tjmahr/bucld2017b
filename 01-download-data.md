@@ -1,10 +1,11 @@
 Get raw data from the database
 ================
 Tristan Mahr
-2017-10-18
+2017-11-07
 
 -   [Do a little setup](#do-a-little-setup)
 -   [Find the eyetracking blocks](#find-the-eyetracking-blocks)
+    -   [Determine which eyetracking blocks used which stimulus recordings](#determine-which-eyetracking-blocks-used-which-stimulus-recordings)
 -   [Download block and child demographic information](#download-block-and-child-demographic-information)
 -   [Download the gaze data](#download-the-gaze-data)
 
@@ -68,12 +69,10 @@ These are the tables in the eyetracking database.
 
 ``` r
 src_tbls(l2t_eyetracking)
-#>  [1] "BlockAttributes"          "Blocks"                  
-#>  [3] "Looks"                    "TrialAttributes"         
-#>  [5] "Trials"                   "q_BlockAttributesByStudy"
-#>  [7] "q_BlocksByStudy"          "q_LooksByStudy"          
-#>  [9] "q_MissingDataByBlock"     "q_TrialAttributesByStudy"
-#> [11] "q_TrialsByStudy"
+#>  [1] "BlockAttributes"          "Blocks"                   "Looks"                   
+#>  [4] "TrialAttributes"          "Trials"                   "q_BlockAttributesByStudy"
+#>  [7] "q_BlocksByStudy"          "q_LooksByStudy"           "q_MissingDataByBlock"    
+#> [10] "q_TrialAttributesByStudy" "q_TrialsByStudy"
 ```
 
 Tables with `q_` at the front are queries which contain helpful information (like Study and ResearchID) alongside the main data in the table. We use the `q_TrialAttributesByStudy` table to get information about each eyetracking trial.
@@ -218,13 +217,12 @@ q_blocks_to_use %>%
   collect() %>% 
   filter(ResearchID == "436D")
 #> # A tibble: 3 x 10
-#>           Study ResearchID  Task  Version             Basename
-#>           <chr>      <chr> <chr>    <chr>                <chr>
-#> 1 DialectSwitch       436D   RWL Standard RWL_Block1_436D53FA2
-#> 2 DialectSwitch       436D   RWL Standard RWL_Block1_436D53FS2
-#> 3 DialectSwitch       436D   RWL Standard RWL_Block2_436D53FA1
-#> # ... with 5 more variables: DateTime <chr>, BlockID <int>,
-#> #   StimulusSet <chr>, Dialect <chr>, Block_Age <int>
+#>           Study ResearchID  Task  Version             Basename            DateTime BlockID
+#>           <chr>      <chr> <chr>    <chr>                <chr>               <chr>   <int>
+#> 1 DialectSwitch       436D   RWL Standard RWL_Block1_436D53FA2 2014-04-01 09:41:07    1229
+#> 2 DialectSwitch       436D   RWL Standard RWL_Block1_436D53FS2 2014-03-28 09:50:09    1230
+#> 3 DialectSwitch       436D   RWL Standard RWL_Block2_436D53FA1 2014-04-01 09:52:14    1231
+#> # ... with 3 more variables: StimulusSet <chr>, Dialect <chr>, Block_Age <int>
 
 # Skip the latest redundant block
 df_blocks_to_keep <- df_blocks_to_keep %>% 
@@ -266,4 +264,55 @@ Save our work. The eyetracking data has `nrow(df_rwl_looks)` rows, so we save it
 ``` r
 readr::write_csv(df_child_vars, file.path(wd, "data-raw", "child-info.csv"))
 readr::write_csv(df_rwl_looks, file.path(wd, "data-raw", "looks.csv.gz"))
+```
+
+------------------------------------------------------------------------
+
+``` r
+sessioninfo::session_info()
+#> - Session info -----------------------------------------------------------------------------------
+#>  setting  value                       
+#>  version  R version 3.4.1 (2017-06-30)
+#>  os       Windows 7 x64 SP 1          
+#>  system   x86_64, mingw32             
+#>  ui       RTerm                       
+#>  language (EN)                        
+#>  collate  English_United States.1252  
+#>  tz       America/Chicago             
+#>  date     2017-11-07                  
+#> 
+#> - Packages ---------------------------------------------------------------------------------------
+#>  package     * version    date       source                                     
+#>  assertthat    0.2.0      2017-04-11 CRAN (R 3.3.2)                             
+#>  backports     1.1.1      2017-09-25 CRAN (R 3.4.1)                             
+#>  bindr         0.1        2016-11-13 CRAN (R 3.4.0)                             
+#>  bindrcpp    * 0.2        2017-06-17 CRAN (R 3.4.0)                             
+#>  clisymbols    1.2.0      2017-08-04 Github (gaborcsardi/clisymbols@e49b4f5)    
+#>  DBI           0.7        2017-06-18 CRAN (R 3.4.0)                             
+#>  dbplyr        1.1.0      2017-06-27 CRAN (R 3.4.1)                             
+#>  digest        0.6.12     2017-01-27 CRAN (R 3.3.2)                             
+#>  dplyr       * 0.7.4      2017-09-28 CRAN (R 3.4.2)                             
+#>  evaluate      0.10.1     2017-06-24 CRAN (R 3.4.1)                             
+#>  glue          1.2.0      2017-10-29 CRAN (R 3.4.2)                             
+#>  highr         0.6        2016-05-09 CRAN (R 3.2.3)                             
+#>  hms           0.3        2016-11-22 CRAN (R 3.3.2)                             
+#>  htmltools     0.3.6      2017-04-28 CRAN (R 3.4.0)                             
+#>  knitr       * 1.17       2017-08-10 CRAN (R 3.4.2)                             
+#>  L2TDatabase * 0.1        2017-08-25 Github (LearningToTalk/L2TDatabase@18c957b)
+#>  lubridate     1.7.1      2017-11-03 CRAN (R 3.4.2)                             
+#>  magrittr      1.5        2014-11-22 CRAN (R 3.1.2)                             
+#>  pkgconfig     2.0.1      2017-03-21 CRAN (R 3.3.3)                             
+#>  R6            2.2.2      2017-06-17 CRAN (R 3.4.0)                             
+#>  Rcpp          0.12.13    2017-09-28 CRAN (R 3.4.2)                             
+#>  readr         1.1.1      2017-05-16 CRAN (R 3.4.0)                             
+#>  rlang         0.1.4      2017-11-05 CRAN (R 3.4.2)                             
+#>  rmarkdown     1.6        2017-06-15 CRAN (R 3.4.2)                             
+#>  RMySQL        0.10.13    2017-08-14 CRAN (R 3.4.1)                             
+#>  rprojroot     1.2        2017-01-16 CRAN (R 3.3.2)                             
+#>  sessioninfo   1.0.1      2017-09-13 Github (r-lib/sessioninfo@e813de4)         
+#>  stringi       1.1.5      2017-04-07 CRAN (R 3.3.3)                             
+#>  stringr       1.2.0      2017-02-18 CRAN (R 3.3.2)                             
+#>  tibble        1.3.4      2017-08-22 CRAN (R 3.4.1)                             
+#>  withr         2.1.0.9000 2017-11-02 Github (jimhester/withr@8ba5e46)           
+#>  yaml          2.1.14     2016-11-12 CRAN (R 3.4.2)
 ```

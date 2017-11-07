@@ -5,12 +5,14 @@ date: "`r Sys.Date()`"
 output: 
   github_document:
     toc: true
-    toc_depth: 2
+    toc_depth: 4
 ---
 
 ```{r setup, include = FALSE, message = FALSE, warning = FALSE, results = 'hide'}
 library("knitr")
 opts_chunk$set(
+  cache.path = "assets/cache/03-",
+  fig.path = "assets/figure/03-",
   warning = FALSE,
   collapse = TRUE, 
   comment = "#>", 
@@ -22,6 +24,7 @@ opts_chunk$set(
 
 wd <- rprojroot::find_rstudio_root_file()
 opts_knit$set(root.dir = wd)
+options(width = 100)
 ```
 
 ## Set up 
@@ -371,5 +374,11 @@ df_looks %>%
   select(ResearchID, Dialect, BlockDialect, 
          HearsNativeDialect, Time, everything()) %>% 
 readr::write_csv(file.path("data", "modeling.csv"))
+```
+
+***
+
+```{r}
+sessioninfo::session_info()
 ```
 

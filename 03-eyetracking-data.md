@@ -1,7 +1,7 @@
 Plot eyetracking data
 ================
 Tristan Mahr
-2017-10-24
+2017-11-07
 
 -   [Set up](#set-up)
 -   [Head counts and other stats](#head-counts-and-other-stats)
@@ -321,7 +321,7 @@ plot_text <- list(
   x_time = "Time (ms) after target noun onset", 
   y_target = "Proportion of looks to named image",
   y_image = "Proportion of looks to image",
-  caption_mean_se = "Mean ± SE"
+  caption_mean_se = "Mean Â± SE"
 )
 
 legend_position <- theme(
@@ -347,7 +347,7 @@ ggplot(df_looks) +
        caption = plot_text$caption_mean_se)
 ```
 
-<img src="03-eyetracking-data_files/figure-markdown_github-ascii_identifiers/gca-plots-1.png" width="80%" />
+<img src="assets/figure/03-gca-plots-1.png" width="80%" />
 
 ``` r
 
@@ -363,7 +363,7 @@ ggplot(df_looks) +
        y = plot_text$y_target)
 ```
 
-<img src="03-eyetracking-data_files/figure-markdown_github-ascii_identifiers/gca-plots-2.png" width="80%" />
+<img src="assets/figure/03-gca-plots-2.png" width="80%" />
 
 ``` r
 
@@ -381,7 +381,7 @@ df_looks %>%
          y = plot_text$y_target)
 ```
 
-<img src="03-eyetracking-data_files/figure-markdown_github-ascii_identifiers/gca-plots-3.png" width="80%" />
+<img src="assets/figure/03-gca-plots-3.png" width="80%" />
 
 ``` r
 
@@ -400,7 +400,7 @@ df_looks %>%
          y = plot_text$y_target) 
 ```
 
-<img src="03-eyetracking-data_files/figure-markdown_github-ascii_identifiers/gca-plots-4.png" width="80%" />
+<img src="assets/figure/03-gca-plots-4.png" width="80%" />
 
 ``` r
 
@@ -419,7 +419,7 @@ df_looks %>%
          y = plot_text$y_target)
 ```
 
-<img src="03-eyetracking-data_files/figure-markdown_github-ascii_identifiers/gca-plots-5.png" width="80%" />
+<img src="assets/figure/03-gca-plots-5.png" width="80%" />
 
 Spaghetti
 ---------
@@ -446,7 +446,7 @@ df_looks %>%
          y = plot_text$y_target)
 ```
 
-<img src="03-eyetracking-data_files/figure-markdown_github-ascii_identifiers/everyone-1.png" width="100%" />
+<img src="assets/figure/03-everyone-1.png" width="100%" />
 
 ``` r
 
@@ -469,7 +469,7 @@ df_looks %>%
          y = plot_text$y_target)
 ```
 
-<img src="03-eyetracking-data_files/figure-markdown_github-ascii_identifiers/everyone-2.png" width="100%" />
+<img src="assets/figure/03-everyone-2.png" width="100%" />
 
 Save data-set for modeling
 --------------------------
@@ -482,4 +482,70 @@ df_looks %>%
   select(ResearchID, Dialect, BlockDialect, 
          HearsNativeDialect, Time, everything()) %>% 
 readr::write_csv(file.path("data", "modeling.csv"))
+```
+
+------------------------------------------------------------------------
+
+``` r
+sessioninfo::session_info()
+#> - Session info -----------------------------------------------------------------------------------
+#>  setting  value                       
+#>  version  R version 3.4.1 (2017-06-30)
+#>  os       Windows 7 x64 SP 1          
+#>  system   x86_64, mingw32             
+#>  ui       RTerm                       
+#>  language (EN)                        
+#>  collate  English_United States.1252  
+#>  tz       America/Chicago             
+#>  date     2017-11-07                  
+#> 
+#> - Packages ---------------------------------------------------------------------------------------
+#>  package         * version    date       source                                 
+#>  assertthat        0.2.0      2017-04-11 CRAN (R 3.3.2)                         
+#>  backports         1.1.1      2017-09-25 CRAN (R 3.4.1)                         
+#>  bindr             0.1        2016-11-13 CRAN (R 3.4.0)                         
+#>  bindrcpp        * 0.2        2017-06-17 CRAN (R 3.4.0)                         
+#>  clisymbols        1.2.0      2017-08-04 Github (gaborcsardi/clisymbols@e49b4f5)
+#>  colorspace        1.3-2      2016-12-14 CRAN (R 3.3.2)                         
+#>  digest            0.6.12     2017-01-27 CRAN (R 3.3.2)                         
+#>  dplyr           * 0.7.4      2017-09-28 CRAN (R 3.4.2)                         
+#>  evaluate          0.10.1     2017-06-24 CRAN (R 3.4.1)                         
+#>  extrafont         0.17       2014-12-08 CRAN (R 3.1.3)                         
+#>  extrafontdb       1.0        2012-06-11 CRAN (R 3.1.3)                         
+#>  forcats           0.2.0      2017-01-23 CRAN (R 3.3.2)                         
+#>  ggplot2         * 2.2.1      2016-12-30 CRAN (R 3.4.1)                         
+#>  glue              1.2.0      2017-10-29 CRAN (R 3.4.2)                         
+#>  gridExtra         2.3        2017-09-09 CRAN (R 3.4.1)                         
+#>  gtable            0.2.0      2016-02-26 CRAN (R 3.2.3)                         
+#>  highr             0.6        2016-05-09 CRAN (R 3.2.3)                         
+#>  hms               0.3        2016-11-22 CRAN (R 3.3.2)                         
+#>  hrbrthemes      * 0.2.0      2017-03-20 Github (hrbrmstr/hrbrthemes@11a5c1d)   
+#>  htmltools         0.3.6      2017-04-28 CRAN (R 3.4.0)                         
+#>  knitr           * 1.17       2017-08-10 CRAN (R 3.4.2)                         
+#>  labeling          0.3        2014-08-23 CRAN (R 3.1.1)                         
+#>  lazyeval          0.2.1      2017-10-29 CRAN (R 3.4.2)                         
+#>  littlelisteners * 0.0.0.9000 2017-09-22 Github (tjmahr/littlelisteners@44e87a4)
+#>  magrittr          1.5        2014-11-22 CRAN (R 3.1.2)                         
+#>  munsell           0.4.3      2016-02-13 CRAN (R 3.2.3)                         
+#>  pkgconfig         2.0.1      2017-03-21 CRAN (R 3.3.3)                         
+#>  plyr              1.8.4      2016-06-08 CRAN (R 3.3.0)                         
+#>  purrr             0.2.4      2017-10-18 CRAN (R 3.4.2)                         
+#>  R6                2.2.2      2017-06-17 CRAN (R 3.4.0)                         
+#>  Rcpp              0.12.13    2017-09-28 CRAN (R 3.4.2)                         
+#>  readr             1.1.1      2017-05-16 CRAN (R 3.4.0)                         
+#>  rlang             0.1.4      2017-11-05 CRAN (R 3.4.2)                         
+#>  rmarkdown         1.6        2017-06-15 CRAN (R 3.4.2)                         
+#>  rprojroot         1.2        2017-01-16 CRAN (R 3.3.2)                         
+#>  Rttf2pt1          1.3.4      2016-05-19 CRAN (R 3.2.5)                         
+#>  scales            0.5.0      2017-08-24 CRAN (R 3.4.1)                         
+#>  sessioninfo       1.0.1      2017-09-13 Github (r-lib/sessioninfo@e813de4)     
+#>  stringi           1.1.5      2017-04-07 CRAN (R 3.3.3)                         
+#>  stringr           1.2.0      2017-02-18 CRAN (R 3.3.2)                         
+#>  tibble            1.3.4      2017-08-22 CRAN (R 3.4.1)                         
+#>  tidyr             0.7.2      2017-10-16 CRAN (R 3.4.2)                         
+#>  tidyselect        0.2.3      2017-11-06 CRAN (R 3.4.2)                         
+#>  viridis           0.4.0      2017-03-27 CRAN (R 3.3.3)                         
+#>  viridisLite       0.2.0      2017-03-24 CRAN (R 3.3.2)                         
+#>  withr             2.1.0.9000 2017-11-02 Github (jimhester/withr@8ba5e46)       
+#>  yaml              2.1.14     2016-11-12 CRAN (R 3.4.2)
 ```

@@ -5,25 +5,26 @@ date: "`r Sys.Date()`"
 output: 
   github_document:
     toc: true
-    toc_depth: 2
-
+    toc_depth: 4
 ---
 
 ```{r setup, include = FALSE, message = FALSE, warning = FALSE, results = 'hide'}
 library("knitr")
 opts_chunk$set(
+  cache.path = "assets/cache/01-",
+  fig.path = "assets/figure/01-",
   warning = FALSE,
   collapse = TRUE, 
   comment = "#>", 
   message = FALSE,
   fig.width = 8,
-  # fig.height = 6,
   fig.asp = 0.618,
   dpi = 300,
   out.width = "80%")
 
 wd <- rprojroot::find_rstudio_root_file()
 opts_knit$set(root.dir = wd)
+options(width = 100)
 ```
 
 
@@ -270,4 +271,10 @@ readr::write_csv(df_child_vars, file.path(wd, "data-raw", "child-info.csv"))
 readr::write_csv(df_rwl_looks, file.path(wd, "data-raw", "looks.csv.gz"))
 ```
 
+
+***
+
+```{r}
+sessioninfo::session_info()
+```
 

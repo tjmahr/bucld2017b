@@ -5,13 +5,14 @@ date: "`r Sys.Date()`"
 output: 
   github_document:
     toc: true
-    toc_depth: 2
-
+    toc_depth: 4
 ---
 
 ```{r setup, include = FALSE, message = FALSE, warning = FALSE, results = 'hide'}
 library("knitr")
 opts_chunk$set(
+  cache.path = "assets/cache/02-",
+  fig.path = "assets/figure/02-",
   warning = FALSE,
   collapse = TRUE, 
   comment = "#>", 
@@ -23,6 +24,7 @@ opts_chunk$set(
 
 wd <- rprojroot::find_rstudio_root_file()
 opts_knit$set(root.dir = wd)
+options(width = 100)
 ```
 
 ## Setup
@@ -232,6 +234,12 @@ Update participants data to only have children with eyetracking data.
 readr::read_csv(file.path(wd, "data-raw", "child-info.csv")) %>% 
   semi_join(looks_clean_blocks) %>% 
   readr::write_csv(file.path(wd, "data", "scores.csv"))
+```
+
+***
+
+```{r}
+sessioninfo::session_info()
 ```
 
 

@@ -1,0 +1,67 @@
+Study,ResearchID,ChildStudyID,Female,AAE,LateTalker,CImplant,Maternal_Education,Maternal_Education_Level,Maternal_Education_Group,Dialect,Gender,EVT_Age,EVT_Raw,EVT_GSV,EVT_Standard,PPVT_Age,PPVT_Raw,PPVT_GSV,PPVT_Standard
+DialectSwitch,458D,883,1,1,0,0,Less Than High School,1,Low,AAE,Girl,44,32,111,90,44,33,89,79
+DialectSwitch,402D,841,0,1,0,0,High School Diploma,3,Low,AAE,Boy,53,60,135,106,54,73,123,100
+DialectSwitch,407D,842,1,1,0,0,Less Than High School,1,Low,AAE,Girl,47,40,118,94,47,47,102,89
+DialectSwitch,408D,843,0,1,0,0,High School Diploma,3,Low,AAE,Boy,53,37,116,84,53,44,99,79
+DialectSwitch,411D,844,1,0,0,0,College Degree,6,High,MAE,Girl,53,72,144,120,54,119,155,134
+DialectSwitch,415D,845,0,1,0,0,Less Than High School,1,Low,AAE,Boy,44,58,134,117,45,53,107,97
+DialectSwitch,418D,846,1,0,0,0,College Degree,6,High,MAE,Girl,57,79,149,122,57,118,154,131
+DialectSwitch,421D,847,1,1,0,0,Less Than High School,1,Low,AAE,Girl,46,32,111,87,48,38,94,78
+DialectSwitch,422D,848,1,0,0,0,College Degree,6,High,MAE,Girl,51,58,134,107,51,78,126,108
+DialectSwitch,423D,849,0,0,0,0,College Degree,6,High,MAE,Boy,49,58,134,110,49,71,121,105
+DialectSwitch,424D,850,0,0,0,0,College Degree,6,High,MAE,Boy,53,57,133,103,52,83,130,110
+DialectSwitch,425D,851,0,0,0,0,Graduate Degree,7,High,MAE,Boy,49,66,140,119,49,81,128,113
+DialectSwitch,426D,852,0,0,0,0,Graduate Degree,7,High,MAE,Boy,54,89,155,133,54,86,132,110
+DialectSwitch,427D,853,0,0,0,0,College Degree,6,High,MAE,Boy,45,89,155,147,46,119,155,145
+DialectSwitch,428D,854,0,1,0,0,Technical/Associate's Degree,5,Mid,AAE,Boy,64,68,141,100,64,79,127,93
+DialectSwitch,429D,855,1,1,0,0,College Degree,6,High,AAE,Girl,58,54,130,93,57,80,128,103
+DialectSwitch,430D,856,1,0,0,0,Graduate Degree,7,High,MAE,Girl,54,96,160,140,54,132,164,144
+DialectSwitch,431D,857,1,0,0,0,Graduate Degree,7,High,MAE,Girl,56,80,150,123,56,115,152,129
+DialectSwitch,432D,858,0,0,0,0,Graduate Degree,7,High,MAE,Boy,44,76,147,136,44,117,153,145
+DialectSwitch,433D,859,1,0,1,0,Technical/Associate's Degree,5,Mid,MAE,Girl,43,75,146,137,43,118,154,148
+DialectSwitch,434D,860,0,0,0,0,Graduate Degree,7,High,MAE,Boy,53,64,138,110,54,90,135,113
+DialectSwitch,435D,861,0,1,0,0,NA,NA,NA,AAE,Boy,69,58,134,89,69,75,124,87
+DialectSwitch,436D,862,1,1,1,0,Less Than High School,1,Low,AAE,Girl,53,18,97,67,53,32,88,70
+DialectSwitch,437D,863,1,1,0,0,GED,2,Low,AAE,Girl,NA,NA,NA,NA,50,44,99,81
+DialectSwitch,438D,864,1,1,0,0,GED,2,Low,AAE,Girl,60,65,139,101,60,85,131,102
+DialectSwitch,439D,865,0,0,0,0,Graduate Degree,7,High,MAE,Boy,51,81,150,131,51,122,157,142
+DialectSwitch,440D,866,0,0,0,0,NA,NA,NA,MAE,Boy,56,61,136,103,56,108,147,123
+DialectSwitch,441D,867,1,0,0,0,College Degree,6,High,MAE,Girl,57,83,152,127,57,106,146,122
+DialectSwitch,442D,868,0,0,0,0,College Degree,6,High,MAE,Boy,60,87,154,124,60,113,150,121
+DialectSwitch,443D,869,1,1,0,0,High School Diploma,3,Low,AAE,Girl,58,59,134,98,58,89,134,107
+DialectSwitch,444D,870,1,0,0,0,College Degree,6,High,MAE,Girl,59,53,129,92,59,83,130,103
+DialectSwitch,445D,871,1,0,0,0,Graduate Degree,7,High,MAE,Girl,42,67,141,130,42,77,126,119
+DialectSwitch,446D,872,1,0,0,0,Some College (2+ years),5,Mid,MAE,Girl,59,68,141,107,59,88,133,106
+DialectSwitch,447D,873,1,0,0,0,Graduate Degree,7,High,MAE,Girl,45,68,141,127,45,91,135,126
+DialectSwitch,448D,874,0,0,0,0,Graduate Degree,7,High,MAE,Boy,50,64,138,113,50,101,142,126
+DialectSwitch,449D,875,0,0,0,0,Some College (2+ years),5,Mid,MAE,Boy,53,84,152,132,53,128,161,143
+DialectSwitch,450D,876,1,0,0,0,Graduate Degree,7,High,MAE,Girl,52,86,154,135,52,111,149,130
+DialectSwitch,451D,877,1,0,0,0,College Degree,6,High,MAE,Girl,49,90,156,143,49,117,153,140
+DialectSwitch,453D,878,0,0,0,0,Graduate Degree,7,High,MAE,Boy,49,85,153,138,48,112,150,137
+DialectSwitch,454D,879,0,0,0,0,Graduate Degree,7,High,MAE,Boy,53,64,138,110,53,99,141,121
+DialectSwitch,455D,880,1,0,0,0,College Degree,6,High,MAE,Girl,51,53,129,100,51,81,128,110
+DialectSwitch,456D,881,0,0,0,0,College Degree,6,High,MAE,Boy,44,49,126,105,44,71,121,111
+DialectSwitch,457D,882,0,0,0,0,Some College (<2 years),4,Mid,MAE,Boy,60,72,144,109,60,112,150,121
+DialectSwitch,459D,884,1,1,0,0,NA,NA,NA,AAE,Girl,40,31,111,95,40,45,100,96
+DialectSwitch,420D,885,0,1,0,0,Less Than High School,1,Low,AAE,Boy,NA,NA,NA,NA,NA,NA,NA,NA
+MaternalEd,500M,900,0,1,0,0,High School Diploma,3,Low,AAE,Boy,40,37,116,100,40,57,110,105
+MaternalEd,501M,901,0,0,0,0,High School Diploma,3,Low,MAE,Boy,49,51,128,101,49,77,126,111
+MaternalEd,502M,902,1,0,0,0,Technical/Associate's Degree,5,Mid,MAE,Girl,39,41,119,106,39,79,127,128
+MaternalEd,503M,903,1,0,0,0,High School Diploma,3,Low,MAE,Girl,47,62,137,117,47,71,121,109
+MaternalEd,504M,904,0,1,0,0,High School Diploma,3,Low,AAE,Boy,43,40,118,99,43,54,108,101
+MaternalEd,505M,905,1,0,0,0,College Degree,6,High,MAE,Girl,41,52,129,117,41,74,123,119
+MaternalEd,506M,906,0,0,0,0,Graduate Degree,7,High,MAE,Boy,38,67,141,137,38,70,120,119
+MaternalEd,507M,907,0,0,0,0,College Degree,6,High,MAE,Boy,50,44,122,92,50,73,123,104
+MaternalEd,508M,908,0,0,0,0,Some College (2+ years),5,Mid,MAE,Boy,55,66,140,110,54,79,127,104
+MaternalEd,509M,909,1,1,0,0,Less Than High School,1,Low,AAE,Girl,54,47,124,91,53,72,122,101
+MaternalEd,510M,910,0,1,0,0,Less Than High School,1,Low,AAE,Boy,36,49,126,121,36,57,110,111
+MaternalEd,511M,911,1,1,0,0,High School Diploma,3,Low,AAE,Girl,42,26,106,88,42,46,101,95
+MaternalEd,512M,912,0,1,0,0,Less Than High School,1,Low,AAE,Boy,53,49,126,94,52,77,126,106
+MaternalEd,513M,913,1,1,0,0,Less Than High School,1,Low,AAE,Girl,39,10,85,78,39,28,84,85
+MaternalEd,514M,914,1,1,0,0,High School Diploma,3,Low,AAE,Girl,45,30,110,89,45,42,97,88
+MaternalEd,515M,915,1,1,1,0,Less Than High School,1,Low,AAE,Girl,42,29,109,91,41,35,91,88
+MaternalEd,516M,916,1,1,0,0,High School Diploma,3,Low,AAE,Girl,46,45,123,98,46,63,115,101
+MaternalEd,550M,917,1,0,0,0,Graduate Degree,7,High,MAE,Girl,NA,NA,NA,NA,37,59,112,113
+MaternalEd,552M,918,1,0,0,0,Technical/Associate's Degree,5,Mid,MAE,Girl,NA,NA,NA,NA,51,19,74,59
+MaternalEd,553M,919,1,1,0,0,Technical/Associate's Degree,5,Mid,AAE,Girl,64,69,142,101,63,85,131,100
+MaternalEd,554M,920,1,1,0,0,Technical/Associate's Degree,5,Mid,AAE,Girl,40,34,113,97,39,33,89,89
