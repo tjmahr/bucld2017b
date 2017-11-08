@@ -2,6 +2,14 @@ Understanding the effects of dialect familiarity on lexical processing
 efficiency in preschool children using the visual world paradigm
 ======================================================================
 
+Research compendium for [our poster](./erskine-mahr-edwards-dialect.pdf) 
+at BUCLD 42:
+
+> Erskine, M. E., Mahr, T., & Edwards, J. R. (2017, November). **Understanding
+the effects of dialect familiarity on lexical processing efficiency in preschool
+children using the visual world paradigm**. Poster session at the 42nd annual
+Boston University Conference on Language Development, Boston, MA.
+
 ## Repository contents
 
 ### Analysis notebooks
@@ -19,7 +27,8 @@ statistics about the participants and includes various plots of the eyetracking
 data from the experiment.
 
 `04-gca-models.Rmd` ([output](./04-gca-models.md)) runs growth curve analyses
-for the data.
+for the data and prepares various plots for the poster.
+
 
 ### Directories
 
@@ -33,16 +42,16 @@ these files.
 
 `assets/`: The image files and model caches for the notebooks are stored here.
 
+
 ### Miscellany
 
-TK TK TK poster file
+`erskine-mahr-edwards-dialect.pdf` contains the poster.
 
 `Makefile` is a makefile to automate running and rendering the notebook files.
 
 The code's `LICENSE` is the GPL-3, but I don't think that should matter because 
 the code is really tailored for this data-set. The
 data is copyrighted and belongs to the University of Wisconsin–Madison, 
-I think. (We collected data at two different university labs.) I don't know.
 
 
 ## Additional information
